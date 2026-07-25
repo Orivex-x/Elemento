@@ -1,0 +1,56 @@
+{
+    "name": "orivex-x/elemento",
+    "description": "Modern PHP HTML template builder with fluent interface, form building, theming, and component system.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "George Small",
+            "homepage": "https://github.com/Orivex-x"
+        }
+    ],
+    "keywords": [
+        "html",
+        "builder",
+        "forms",
+        "templates",
+        "fluent",
+        "xss-prevention",
+        "component",
+        "theming"
+    ],
+    "homepage": "https://github.com/orivex-x/Elemento",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/orivex-x/Elemento.git"
+    },
+    "require": {
+        "php": ">=8.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.5",
+        "phpstan/phpstan": "^1.0",
+        "composer-phar/php-cs-fixer": "^3.88"
+    },
+    "autoload": {
+        "psr-4": {
+            "Elemento\\": "src/Elemento"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": [
+            "@putenv XDEBUG_MODE=coverage",
+            "vendor/bin/phpunit --coverage-html coverage --coverage-text"
+        ],
+        "phpstan": "vendor/bin/phpstan analyse src --level 5",
+        "fix": "php vendor/bin/php-cs-fixer.phar fix",
+        "lint": "php vendor/bin/php-cs-fixer.phar fix --dry-run"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "stable"
+}

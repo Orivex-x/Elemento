@@ -1,0 +1,44 @@
+<?php
+
+namespace Elemento\Elements;
+
+use Elemento\Element;
+
+class Progress extends Element
+{
+    protected const TAG = 'progress';
+
+    /**
+     * Create a progress element.
+     *
+     * @param array $attributes
+     *
+     * @return void
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct(static::TAG, $attributes);
+    }
+    /**
+     * Configure the element.
+     *
+     * @param float $value
+     *
+     * @return self
+     */
+    public function value(float $value): self
+    {
+        return $this->attr('value', $value);
+    }
+    /**
+     * Configure the element.
+     *
+     * @param float $value
+     *
+     * @return self
+     */
+    public function max(float $value): self
+    {
+        return $this->attr('max', $value);
+    }
+}

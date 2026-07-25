@@ -1,0 +1,21 @@
+# Composer
+/vendor/
+/composer.lock
+
+# PHPUnit and coverage
+/coverage/
+/tests/coverage/
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# Static analysis and formatting caches
+/.php-cs-fixer.cache
+/.phpstan.cache
+/.phpstan/
+
+# Build output
+/build/
+/dist/
+
+# PhpStorm project settings
+/.idea/

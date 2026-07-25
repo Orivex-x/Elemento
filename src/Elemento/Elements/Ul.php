@@ -1,0 +1,22 @@
+<?php
+
+namespace Elemento\Elements;
+
+use Elemento\Element;
+
+class Ul extends Element
+{
+    protected const TAG = 'ul';
+
+    /**
+     * Create a ul element.
+     *
+     * @param array $attributes
+     *
+     * @return void
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct(static::TAG, $attributes);
+    }
+}
