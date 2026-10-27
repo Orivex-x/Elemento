@@ -55,4 +55,46 @@ class DataBinderTest extends TestCase
 
         self::assertSame('Ada', DataBinder::getValue($data, 'profile.name'));
     }
+
+    public function testGetValueReadsNestedArrayValuesAndReturnsDefaultForMissingKeys(): void
+    {
+        $data = [
+            'profile' => [
+                'name' => 'Ada',
+            ],
+        ];
+
+        // Covers reading through an array
+        self::assertSame('Ada', DataBinder::getValue($data, 'profile.name'));
+
+        // Covers the missing-key branch for arrays
+        self::assertSame(
+            'Guest',
+            DataBinder::getValue($data, 'profile.missing', 'Guest')
+        );
+
+        // Covers the branch where traversal reaches a scalar
+        self::assertSame(
+            'Fallback',
+            DataBinder::getValue($data, 'profile.name.first', 'Fallback')
+        );
+    }
+
+    public function testHasChecksNestedArrayValuesAndHandlesMissingKeys(): void
+    {
+        $data = [
+            'profile' => [
+                'name' => 'Ada',
+            ],
+        ];
+
+        // Covers successful traversal through arrays
+        self::assertTrue(DataBinder::has($data, 'profile.name'));
+
+        // Covers the missing-key branch for arrays
+        self::assertFalse(DataBinder::has($data, 'profile.missing'));
+
+        // Covers the branch where traversal reaches a scalar
+        self::assertFalse(DataBinder::has($data, 'profile.name.first'));
+    }
 }

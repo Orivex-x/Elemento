@@ -3,6 +3,8 @@
 namespace tests;
 
 use Elemento\Elemento;
+use Elemento\Elements\Form;
+use Elemento\Form\FormBuilder;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -127,5 +129,100 @@ class FormBuilderTest extends TestCase
 
         self::assertFalse($form->hasField('bio'));
         self::assertStringNotContainsString('name="bio"', $form->render());
+    }
+
+    public function testGetCreatesFormWithGetMethod(): void
+    {
+        $form = FormBuilder::get('/search', ['id' => 'search-form']);
+
+        $html = $form->render();
+
+        self::assertStringContainsString('method="GET"', $html);
+        self::assertStringContainsString('action="/search"', $html);
+        self::assertStringContainsString('id="search-form"', $html);
+    }
+
+    public function testSetErrorsStoresAndAppliesFieldErrors(): void
+    {
+        $form = Elemento::postForm('/save');
+        $form->field('email');
+        $form->field('name');
+
+        $form->setErrors([
+            'email' => ['Email is required', 'Email is invalid'],
+            'name' => 'Name is required',
+            'unknown' => 'Unknown field error',
+        ]);
+
+        self::assertTrue($form->hasErrors());
+        self::assertSame([
+            'email' => ['Email is required', 'Email is invalid'],
+            'name' => 'Name is required',
+            'unknown' => 'Unknown field error',
+        ], $form->getErrors());
+
+        $html = $form->render();
+
+        self::assertStringContainsString('Email is required', $html);
+        self::assertStringContainsString('Email is invalid', $html);
+        self::assertStringContainsString('Name is required', $html);
+        self::assertStringNotContainsString('Unknown field error', $html);
+        self::assertStringContainsString('is-invalid', $html);
+    }
+
+    public function testGetFormReturnsUnderlyingFormElement(): void
+    {
+        $form = FormBuilder::post('/save', ['id' => 'profile-form']);
+
+        $element = $form->getForm();
+
+        self::assertInstanceOf(Form::class, $element);
+        self::assertSame('profile-form', $element->getAttribute('id'));
+    }
+
+    public function testBindDataPopulatesFieldValues(): void
+    {
+        $form = Elemento::postForm('/save');
+
+        $form->field('name');
+        $form->field('age');
+
+        $result = $form->bindData([
+            'name' => 'Alice',
+            'age' => 30,
+        ]);
+
+        self::assertSame($form, $result);
+        self::assertStringContainsString('value="Alice"', $form->render());
+        self::assertStringContainsString('value="30"', $form->render());
+    }
+
+    public function testFieldRequiredOptionIsApplied(): void
+    {
+        $form = Elemento::postForm('/save');
+
+        $form->field('email', 'email', [
+            'required' => true,
+        ]);
+
+        self::assertStringContainsString('required', $form->render());
+    }
+
+    public function testFieldSelectOptionsAreApplied(): void
+    {
+        $form = Elemento::postForm('/save');
+
+        $form->field('country', 'select', [
+            'label' => 'Country',
+            'options' => [
+                'uk' => 'United Kingdom',
+                'us' => 'United States',
+            ],
+        ]);
+
+        $html = $form->render();
+
+        self::assertStringContainsString('United Kingdom', $html);
+        self::assertStringContainsString('United States', $html);
     }
 }

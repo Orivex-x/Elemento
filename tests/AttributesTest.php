@@ -38,4 +38,36 @@ class AttributesTest extends TestCase
         self::assertSame([], $clone->all());
         self::assertSame(['three', 'four'], $classes->all());
     }
+
+    public function testAttributeManagerRendersTrueForNonBooleanAttributes(): void
+    {
+        $attributes = new AttributeManager([
+            'data-enabled' => true,
+        ]);
+
+        self::assertSame(' data-enabled="true"', (string) $attributes);
+    }
+
+    public function testAttributeManagerCloneReindexesArrayAttributeValues(): void
+    {
+        $attributes = new AttributeManager([
+            'data-items' => [
+                2 => 'first',
+                5 => 'second',
+            ],
+        ]);
+
+        $clone = clone $attributes;
+
+        self::assertSame(
+            ['first', 'second'],
+            $clone->get('data-items')
+        );
+
+        // Cloning should not modify the original attributes.
+        self::assertSame(
+            [2 => 'first', 5 => 'second'],
+            $attributes->get('data-items')
+        );
+    }
 }

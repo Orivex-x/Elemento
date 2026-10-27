@@ -125,4 +125,60 @@ class ElementTest extends TestCase
         self::assertStringContainsString('hidden', $element->render());
         self::assertSame('<div title="Initial" id="panel" data-state="open"></div>', $clone->render());
     }
+
+    public function testConstructorRejectsInvalidTagName(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid HTML tag: invalid tag');
+
+        Elemento::element('invalid tag');
+    }
+
+    public function testAttrReinitializesClassManagerForArrayAndStringValues(): void
+    {
+        $element = Elemento::div()
+            ->attr('class', ['one', 'two']);
+
+        self::assertSame(['one', 'two'], $element->getClasses());
+        self::assertSame('<div class="one two"></div>', $element->render());
+
+        $element->attr('class', 'three four');
+
+        self::assertSame(['three', 'four'], $element->getClasses());
+        self::assertSame('<div class="three four"></div>', $element->render());
+    }
+
+    public function testAddAcceptsAnArrayOfChildren(): void
+    {
+        $element = Elemento::div()->add([
+            'First',
+            Elemento::span('Second'),
+            'Third',
+        ]);
+
+        self::assertSame(
+            '<div>First<span>Second</span>Third</div>',
+            $element->render()
+        );
+
+        self::assertCount(3, $element->getChildren());
+    }
+
+    public function testAppendTextUpdatesExistingTextContent(): void
+    {
+        $element = Elemento::p('Hello')->appendText(' <world>');
+
+        self::assertSame('Hello <world>', $element->getText());
+        self::assertSame('Hello &lt;world&gt;', $element->getEscapedText());
+        self::assertSame('<p>Hello &lt;world&gt;</p>', $element->render());
+    }
+
+    public function testAppendTextDoesNotSetTextContentWhenInitiallyUnset(): void
+    {
+        $element = Elemento::p()->appendText('Hello');
+
+        self::assertSame('', $element->getText());
+        self::assertSame('Hello', $element->getEscapedText());
+        self::assertSame('<p>Hello</p>', $element->render());
+    }
 }
