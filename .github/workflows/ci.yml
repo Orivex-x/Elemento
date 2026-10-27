@@ -31,4 +31,19 @@ jobs:
         run: composer phpstan
 
       - name: Generate coverage report
-        run: XDEBUG_MODE=coverage composer test-coverage
+        run: composer test-coverage
+
+      - name: Verify coverage report
+        run: |
+          if [ ! -s coverage.xml ]; then
+            echo "Error: coverage.xml was not generated or is empty."
+            exit 1
+          fi
+          echo "Coverage report generated successfully."
+          ls -lh coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
