@@ -1,7 +1,7 @@
 # Elemento
 
 [![CI](https://github.com/orivex-x/Elemento/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/orivex-x/Elemento/actions/workflows/ci.yml)
-[![Coverage snapshot](https://img.shields.io/badge/coverage%20snapshot-84.55%25-brightgreen)](#development)
+[![codecov](https://codecov.io/gh/Orivex-x/Elemento/branch/master/graph/badge.svg)](https://codecov.io/gh/Orivex-x/Elemento)
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.3-777BB4?logo=php&logoColor=white)](composer.json)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
